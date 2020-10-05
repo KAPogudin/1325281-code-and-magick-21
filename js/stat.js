@@ -1,5 +1,5 @@
 
-
+'use strict';
 
 
 var CLOUD_WIDTH = 420;
@@ -10,7 +10,7 @@ var GAP = 10;
 var FONT_GAP = 20;
 var TEXT_HEIGHT = 40;
 var BAR_WIDTH = 40;
-var HISTOGRAM_HEIGHT = 100;
+var HISTOGRAM_HEIGHT = 150;
 
 
 
@@ -20,10 +20,10 @@ var renderCloud = function(ctx, x, y, color) {
 
 };
 
-var getMaxElement = function(arr) {
-  var maxElement = arr[0];
-  for (var i = 1; i < arr.length; i++) {
-    if (arr[i] < maxElement) {
+var getMaxElement = function (arr) {
+  let maxElement = arr[0];
+  for (let i = 1; i < arr.length; i++) {
+    if (arr[i] > maxElement) {
       maxElement = arr[i];
     }
   }
@@ -34,7 +34,7 @@ window.renderStatistics = function(ctx, names, times) {
   renderCloud(
     ctx,
     CLOUD_X + GAP,
-    CLOUD_Y +GAP,
+    CLOUD_Y + GAP,
     'rgba(0, 0, 0, 0.7)'
     );
   renderCloud(
@@ -50,36 +50,36 @@ window.renderStatistics = function(ctx, names, times) {
   ctx.fillText('Ура вы победили!', CLOUD_X + GAP, CLOUD_Y + TEXT_HEIGHT);
   ctx.fillText('Список результатов:', CLOUD_X + GAP, CLOUD_Y + TEXT_HEIGHT + FONT_GAP);
 
-  var maxTime = getMaxElement(times);
+  let maxTime = getMaxElement(times);
 
 
-  for (var i=0;i<names.length; i++){
+  for (let i=0; i < names.length; i++){
+    ctx.fillStyle = `black`;
+
     ctx.fillText (
       names[i],
-      i*CLOUD_X+CLOUD_X+BAR_WIDTH,
+      i*CLOUD_X + CLOUD_X + BAR_WIDTH,
       CLOUD_HEIGHT
     );
 
-
-
     ctx.fillText(
       Math.ceil(times[i]),
-      i*CLOUD_X+CLOUD_X+BAR_WIDTH,
-      (HISTOGRAM_HEIGHT*times[i])/maxTime);
+      i*CLOUD_X + CLOUD_X + BAR_WIDTH,
+      CLOUD_HEIGHT- FONT_GAP - GAP - (HISTOGRAM_HEIGHT * times[i]) / maxTime);
 
+    if (names[i] === 'Вы'){
+        ctx.fillStyle = 'rgba(255, 0, 0, 1)';
+      }else{
+        ctx.fillStyle = 'hsl(211, 100%, '+ Math.random()*100+'%)';
+      }
 
     ctx.fillRect(
-      i*CLOUD_X+CLOUD_X+BAR_WIDTH,
-      CLOUD_Y*10,
+      i*CLOUD_X + CLOUD_X + BAR_WIDTH,
+      CLOUD_HEIGHT - FONT_GAP - ((HISTOGRAM_HEIGHT * times[i]) / maxTime),
       BAR_WIDTH,
-      -(HISTOGRAM_HEIGHT*times[i])/maxTime);
+      (HISTOGRAM_HEIGHT * times[i]) / maxTime);
 
 
-     /* if (names[i] === 'Вы'){
-        ctx.fillStyle = rgba(255, 0, 0, 1);
-      }else{
-        ctx.fillStyle = hls(211, 211, Math.random());
-      }*/
 
   }
-}
+};
